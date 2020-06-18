@@ -1,0 +1,6 @@
+<a href="/new_memo" class="btn btn-primary add" role="button">追加</a>
+<ul>
+  <% @hash_data.each do |item| %>
+  <li><a href="/<%= item["id"] %>"><%= item["title"] %></a></li>
+  <% end %>
+</ul>
