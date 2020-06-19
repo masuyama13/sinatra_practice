@@ -2,13 +2,10 @@
 
 require "sinatra"
 require "sinatra/reloader"
-require "json"
 require "pg"
 
 class Memo
   attr_reader :id, :title, :body
-
-  FILE_NAME = "memos.json"
 
   def initialize(title, body)
     @title = title
