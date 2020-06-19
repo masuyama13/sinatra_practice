@@ -14,7 +14,10 @@ module Memo
 
   def self.add(post_text)
     connect = PG.connect(dbname: "memo")
-    connect.exec("INSERT INTO Memos (title, body) VALUES (\'#{Memo.title(post_text)}\', \'#{Memo.body(post_text)}\')")
+    connect.exec(
+      "INSERT INTO Memos (title, body) VALUES \
+      (\'#{Memo.title(post_text)}\', \'#{Memo.body(post_text)}\')"
+    )
     connect.finish
   end
 
@@ -38,7 +41,11 @@ module Memo
 
   def self.update(id, post_text)
     connect = PG.connect(dbname: "memo")
-    connect.exec("UPDATE Memos SET title = \'#{Memo.title(post_text)}\', body = \'#{Memo.body(post_text)}\' WHERE id = #{id}")
+    connect.exec(
+      "UPDATE Memos SET \
+      title = \'#{Memo.title(post_text)}\', \
+      body = \'#{Memo.body(post_text)}\' WHERE id = #{id}"
+    )
     connect.finish
   end
 
