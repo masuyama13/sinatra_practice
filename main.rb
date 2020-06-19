@@ -19,9 +19,9 @@ class Memo
   def self.load
     # File.open(FILE_NAME) { |f| JSON.load(f) }
     connect = PG.connect(dbname: "memo")
-    memos = connect.exec("SELECT * FROM Memos")
+    items = connect.exec("SELECT * FROM Memos")
     connect.finish
-    memos
+    items
   end
 
   def self.create(post_data)
@@ -82,10 +82,14 @@ class Memo
     target["title"] + "\n" + "\n" + target["body"].gsub("<br>", "\n")
   end
 
-  def self.update(id, text)
+  def self.update(id, post_data)
     # memos = Memo.load
     # memos[Memo.find_index(id)] = Memo.create_with_id(id.to_i, text).to_hash
     # File.open(FILE_NAME, "w") { |f| JSON.dump(memos, f) }
+    new_memo = Memo.create(post_data)
+    connect = PG.connect(dbname: "memo")
+    connect.exec("UPDATE Memos SET title = \'#{new_memo.title}\', body = \'#{new_memo.body}\' WHERE id = #{id}")
+    connect.finish
   end
 
   def self.find_index(id)
