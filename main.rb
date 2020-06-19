@@ -10,8 +10,8 @@ class Memo
 
   FILE_NAME = "memos.json"
 
-  def initialize(id, title, body)
-    @id = id
+  def initialize(title, body)
+    # @id = id
     @title = title
     @body = body
   end
@@ -19,7 +19,7 @@ class Memo
   def self.load
     # File.open(FILE_NAME) { |f| JSON.load(f) }
     connect = PG.connect(dbname: "memo")
-    memos = connect.exec("SELECT * FROM memo")
+    memos = connect.exec("SELECT * FROM Memos")
     connect.finish
     memos
   end
@@ -29,6 +29,9 @@ class Memo
     # title = Memo.title(post_data)
     # body = Memo.body(post_data)
     # Memo.new(id, title, body)
+    title = Memo.title(post_data)
+    body = Memo.body(post_data)
+    Memo.new(title, body)
   end
 
   def self.add(post_data)
@@ -36,9 +39,10 @@ class Memo
     # File.open(FILE_NAME, "w") { |f| JSON.dump(new_memos, f) }
     # ここからやる https://www.dbonline.jp/postgresql/type/index5.html
 
-    # connect = PG.connect(dbname: "memo")
-    # memos = connect.exec("INSERT INTO VALUES (#{new_memo.title}, #{new_memo.body})")
-    # connect.finish
+    new_memo = Memo.create(post_data)
+    connect = PG.connect(dbname: "memo")
+    connect.exec("INSERT INTO Memos (title, body) VALUES (\'#{new_memo.title}\', \'#{new_memo.body}\')")
+    connect.finish
   end
 
   def self.destroy(id)
@@ -53,10 +57,10 @@ class Memo
   end
 
   def self.refer(item)
-    @id = connect.exec("SELECT id FROM memo")
-    @title = connect.exec("SELECT title FROM memo")
-    @body = connect.exec("SELECT body FROM memo")
-    Memo.new(id, title, body)
+    # id = item["id"]
+    # title = item["title"]
+    # body = item["body"]
+    # Memo.new(id, title, body)
   end
 
   def self.find(id)
@@ -65,7 +69,7 @@ class Memo
     #   Memo.refer(target_item)
     # end
     connect = PG.connect(dbname: "memo")
-    memo = connect.exec("SELECT * FROM memo WHERE id = #{id.to_i}")
+    memo = connect.exec("SELECT * FROM Memos WHERE id = #{id.to_i}")
     connect.finish
     memo[0]
   end
@@ -81,13 +85,13 @@ class Memo
   end
 
   def self.title(post_data)
-    # post_data.split("\s")[0]
+    post_data.split("\s")[0]
   end
 
   def self.body(post_data)
-    # ary = post_data.split("\s")
-    # ary.delete_at(0)
-    # ary.join("<br>")
+    ary = post_data.split("\s")
+    ary.delete_at(0)
+    ary.join("<br>")
   end
 
   def to_hash
