@@ -22,16 +22,9 @@ class Memo
     items
   end
 
-  def self.create(post_text)
-    title = Memo.title(post_text)
-    body = Memo.body(post_text)
-    Memo.new(title, body)
-  end
-
   def self.add(post_text)
-    new_memo = Memo.create(post_text)
     connect = PG.connect(dbname: "memo")
-    connect.exec("INSERT INTO Memos (title, body) VALUES (\'#{new_memo.title}\', \'#{new_memo.body}\')")
+    connect.exec("INSERT INTO Memos (title, body) VALUES (\'#{Memo.title(post_text)}\', \'#{Memo.body(post_text)}\')")
     connect.finish
   end
 
@@ -54,9 +47,8 @@ class Memo
   end
 
   def self.update(id, post_text)
-    new_memo = Memo.create(post_text)
     connect = PG.connect(dbname: "memo")
-    connect.exec("UPDATE Memos SET title = \'#{new_memo.title}\', body = \'#{new_memo.body}\' WHERE id = #{id}")
+    connect.exec("UPDATE Memos SET title = \'#{Memo.title(post_text)}\', \'#{Memo.body(post_text)}\' WHERE id = #{id}")
     connect.finish
   end
 
