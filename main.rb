@@ -22,14 +22,14 @@ class Memo
     items
   end
 
-  def self.create(post_data)
-    title = Memo.title(post_data)
-    body = Memo.body(post_data)
+  def self.create(post_text)
+    title = Memo.title(post_text)
+    body = Memo.body(post_text)
     Memo.new(title, body)
   end
 
-  def self.add(post_data)
-    new_memo = Memo.create(post_data)
+  def self.add(post_text)
+    new_memo = Memo.create(post_text)
     connect = PG.connect(dbname: "memo")
     connect.exec("INSERT INTO Memos (title, body) VALUES (\'#{new_memo.title}\', \'#{new_memo.body}\')")
     connect.finish
@@ -53,19 +53,19 @@ class Memo
     target["title"] + "\n" + "\n" + target["body"].gsub("<br>", "\n")
   end
 
-  def self.update(id, post_data)
-    new_memo = Memo.create(post_data)
+  def self.update(id, post_text)
+    new_memo = Memo.create(post_text)
     connect = PG.connect(dbname: "memo")
     connect.exec("UPDATE Memos SET title = \'#{new_memo.title}\', body = \'#{new_memo.body}\' WHERE id = #{id}")
     connect.finish
   end
 
-  def self.title(post_data)
-    post_data.split("\s")[0]
+  def self.title(post_text)
+    post_text.split("\s")[0]
   end
 
-  def self.body(post_data)
-    ary = post_data.split("\s")
+  def self.body(post_text)
+    ary = post_text.split("\s")
     ary.delete_at(0)
     ary.join("<br>")
   end
