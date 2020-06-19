@@ -72,9 +72,14 @@ class Memo
     #   Memo.refer(target_item)
     # end
     connect = PG.connect(dbname: "memo")
-    memo = connect.exec("SELECT * FROM Memos WHERE id = #{id.to_i}")
+    item = connect.exec("SELECT * FROM Memos WHERE id = #{id.to_i}")
     connect.finish
-    memo[0]
+    item[0]
+  end
+
+  def self.edit_text(id)
+    target = Memo.find(id)
+    target["title"] + "\n" + "\n" + target["body"].gsub("<br>", "\n")
   end
 
   def self.update(id, text)
@@ -97,13 +102,13 @@ class Memo
     ary.join("<br>")
   end
 
-  def to_hash
-    # { "id" => id, "title" => title, "body" => body }
-  end
+  # def to_hash
+  #   { "id" => id, "title" => title, "body" => body }
+  # end
 
-  def text_show
-    # title + "\n" + "\n" + body.gsub("<br>", "\n")
-  end
+  # def text_show
+  #   self["title"] + "\n" + "\n" + self["body"].gsub("<br>", "\n")
+  # end
 end
 
 enable :method_override
@@ -132,7 +137,8 @@ delete "/:id" do |id|
 end
 
 get "/:id/edit" do |id|
-  @former_text = Memo.find(id).text_show
+  # @former_text = Memo.find(id).text_show
+  @item = Memo.edit_text(id)
   erb :edit
 end
 
