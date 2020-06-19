@@ -48,6 +48,9 @@ class Memo
   def self.destroy(id)
     # new_memos = Memo.load.delete_if { |item| item["id"] == id.to_i }
     # File.open(FILE_NAME, "w") { |f| JSON.dump(new_memos, f) }
+    connect = PG.connect(dbname: "memo")
+    connect.exec("DELETE FROM Memos WHERE id = #{id}")
+    connect.finish
   end
 
   def self.create_with_id(id, post_data)
