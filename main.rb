@@ -4,14 +4,7 @@ require "sinatra"
 require "sinatra/reloader"
 require "pg"
 
-class Memo
-  attr_reader :id, :title, :body
-
-  def initialize(title, body)
-    @title = title
-    @body = body
-  end
-
+module Memo
   def self.load
     connect = PG.connect(dbname: "memo")
     items = connect.exec("SELECT * FROM Memos")
