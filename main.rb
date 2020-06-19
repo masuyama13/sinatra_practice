@@ -73,7 +73,7 @@ end
 
 enable :method_override
 get "/" do
-  @memos = Memo.load
+  @items = Memo.load
   erb :index
 end
 
