@@ -18,9 +18,10 @@ class Memo
   end
 
   def self.add(post_text)
+    title = Memo.title(post_text)
+    body = Memo.body(post_text)
     Memo.new.connect.exec(
-      "INSERT INTO Memos (title, body) VALUES \
-      (\'#{Memo.title(post_text)}\', \'#{Memo.body(post_text)}\')"
+      "INSERT INTO Memos (title, body) VALUES ('#{title}', '#{body}')"
     )
   end
 
@@ -33,10 +34,10 @@ class Memo
   end
 
   def self.update(id, post_text)
+    title = Memo.title(post_text)
+    body = Memo.body(post_text)
     Memo.new.connect.exec(
-      "UPDATE Memos SET \
-      title = \'#{Memo.title(post_text)}\', \
-      body = \'#{Memo.body(post_text)}\' WHERE id = #{id}"
+      "UPDATE Memos SET title = '#{title}', body = '#{body}' WHERE id = #{id}"
     )
   end
 
