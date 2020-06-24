@@ -21,23 +21,23 @@ class Memo
     title = Memo.title(post_text)
     body = Memo.body(post_text)
     Memo.new.connect.exec(
-      "INSERT INTO Memos (title, body) VALUES ('#{title}', '#{body}')"
+      "INSERT INTO Memos (title, body) VALUES ($1, $2)", [title, body]
     )
   end
 
   def self.destroy(id)
-    Memo.new.connect.exec("DELETE FROM Memos WHERE id = #{id}")
+    Memo.new.connect.exec("DELETE FROM Memos WHERE id = $1", [id])
   end
 
   def self.find(id)
-    Memo.new.connect.exec("SELECT * FROM Memos WHERE id = #{id.to_i}").first
+    Memo.new.connect.exec("SELECT * FROM Memos WHERE id = $1", [id]).first
   end
 
   def self.update(id, post_text)
     title = Memo.title(post_text)
     body = Memo.body(post_text)
     Memo.new.connect.exec(
-      "UPDATE Memos SET title = '#{title}', body = '#{body}' WHERE id = #{id}"
+      "UPDATE Memos SET title = $1, body = $2 WHERE id = $3", [title, body, id]
     )
   end
 
