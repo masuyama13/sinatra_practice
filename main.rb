@@ -32,11 +32,6 @@ class Memo
     Memo.new.connect.exec("SELECT * FROM Memos WHERE id = #{id.to_i}").first
   end
 
-  def self.edit_text(id)
-    target = Memo.find(id)
-    target["title"] + "\n" + "\n" + target["body"].gsub("<br>", "\n")
-  end
-
   def self.update(id, post_text)
     Memo.new.connect.exec(
       "UPDATE Memos SET \
@@ -52,7 +47,7 @@ class Memo
   def self.body(post_text)
     ary = post_text.split("\s")
     ary.delete_at(0)
-    ary.join("<br>")
+    ary.join("\n")
   end
 end
 
@@ -82,7 +77,7 @@ delete "/:id" do |id|
 end
 
 get "/:id/edit" do |id|
-  @item = Memo.edit_text(id)
+  @item = Memo.find(id)
   erb :edit
 end
 
