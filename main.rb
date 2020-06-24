@@ -4,34 +4,32 @@ require "sinatra"
 require "sinatra/reloader"
 require "pg"
 
-module Memo
+class Memo
+  attr_reader :connect
+
+  DB_NAME = "memo"
+
+  def initialize
+    @connect = PG.connect(dbname: DB_NAME)
+  end
+
   def self.load
-    connect = PG.connect(dbname: "memo")
-    items = connect.exec("SELECT * FROM Memos")
-    connect.finish
-    items
+    Memo.new.connect.exec("SELECT * FROM Memos")
   end
 
   def self.add(post_text)
-    connect = PG.connect(dbname: "memo")
-    connect.exec(
+    Memo.new.connect.exec(
       "INSERT INTO Memos (title, body) VALUES \
       (\'#{Memo.title(post_text)}\', \'#{Memo.body(post_text)}\')"
     )
-    connect.finish
   end
 
   def self.destroy(id)
-    connect = PG.connect(dbname: "memo")
-    connect.exec("DELETE FROM Memos WHERE id = #{id}")
-    connect.finish
+    Memo.new.connect.exec("DELETE FROM Memos WHERE id = #{id}")
   end
 
   def self.find(id)
-    connect = PG.connect(dbname: "memo")
-    item = connect.exec("SELECT * FROM Memos WHERE id = #{id.to_i}")
-    connect.finish
-    item[0]
+    Memo.new.connect.exec("SELECT * FROM Memos WHERE id = #{id.to_i}").first
   end
 
   def self.edit_text(id)
@@ -40,17 +38,15 @@ module Memo
   end
 
   def self.update(id, post_text)
-    connect = PG.connect(dbname: "memo")
-    connect.exec(
+    Memo.new.connect.exec(
       "UPDATE Memos SET \
       title = \'#{Memo.title(post_text)}\', \
       body = \'#{Memo.body(post_text)}\' WHERE id = #{id}"
     )
-    connect.finish
   end
 
   def self.title(post_text)
-    post_text.split("\s")[0]
+    post_text.split("\s").first
   end
 
   def self.body(post_text)
