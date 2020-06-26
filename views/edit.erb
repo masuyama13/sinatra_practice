@@ -1,5 +1,5 @@
 <form method="post">
-  <textarea name="text" cols="30" rows="10"><%= @former_text %></textarea>
+  <textarea name="text" cols="30" rows="10"><%= @item["title"] %>&#13;&#13;<%= @item["body"] %></textarea>
   <input type="hidden" name="_method" value="patch">
   <input type="submit" class="btn btn-primary" value="保存">
 </form>
