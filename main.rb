@@ -5,38 +5,32 @@ require "sinatra/reloader"
 require "pg"
 
 class Memo
-  attr_reader :connect
-
-  DB_NAME = "memo"
-
-  def initialize
-    @connect = PG.connect(dbname: DB_NAME)
-  end
+  @@connect = PG.connect(dbname: "memo")
 
   def self.load
-    Memo.new.connect.exec("SELECT * FROM Memos")
+    @@connect.exec("SELECT * FROM Memos")
   end
 
   def self.add(post_text)
     title = Memo.title(post_text)
     body = Memo.body(post_text)
-    Memo.new.connect.exec(
+    @@connect.exec(
       "INSERT INTO Memos (title, body) VALUES ($1, $2)", [title, body]
     )
   end
 
   def self.destroy(id)
-    Memo.new.connect.exec("DELETE FROM Memos WHERE id = $1", [id])
+    @@connect.exec("DELETE FROM Memos WHERE id = $1", [id])
   end
 
   def self.find(id)
-    Memo.new.connect.exec("SELECT * FROM Memos WHERE id = $1", [id]).first
+    @@connect.exec("SELECT * FROM Memos WHERE id = $1", [id]).first
   end
 
   def self.update(id, post_text)
     title = Memo.title(post_text)
     body = Memo.body(post_text)
-    Memo.new.connect.exec(
+    @@connect.exec(
       "UPDATE Memos SET title = $1, body = $2 WHERE id = $3", [title, body, id]
     )
   end
